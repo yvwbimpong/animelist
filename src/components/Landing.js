@@ -11,10 +11,14 @@ class Landing extends Component {
     this.state = {
       animeList: [],
       currentSelectedAnime: false,
+      filter: 9,
     };
   }
 
   componentDidMount() {
+    setTimeout(() => {
+      this.handleEnableFilterList();
+    }, 1000);
     this.fetchAnimeList();
   }
 
@@ -37,6 +41,27 @@ class Landing extends Component {
       .catch((error) => {
         console.log(error);
       });
+  }
+
+  handleEnableFilterList() {
+    const filteredList = this.state.animeList.filter((item) => {
+      return item.score > this.state.filter;
+    });
+
+    console.log("filtered list", filteredList);
+
+    this.setState({
+      oldAnimeList: this.state.animeList,
+      animeList: filteredList,
+      filterEnabled: true,
+    });
+  }
+
+  handleDisableFilterList() {
+    this.setState({
+      animeList: this.state.oldAnimeList,
+      filterEnabled: false,
+    });
   }
 
   renderAnimeDetailModal(item) {
