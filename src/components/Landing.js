@@ -1,9 +1,5 @@
 import React, { Component } from "react";
 import logo from "../assets/logo.png";
-import radar from "../assets/Group 1.png";
-import upload from "../assets/Icon feather-upload-cloud.png";
-import file from "../assets/Icon awesome-file-upload.png";
-import DragAndDrop from "./DragDrop";
 import axios from "axios";
 
 const primaryLight = "#3AAF29";
@@ -12,23 +8,28 @@ const primaryDark = "#007547";
 class Landing extends Component {
   constructor(props) {
     super(props);
-    this.filePicker = React.createRef();
     this.state = {
-      animeList: [{}, {}, {}, {}, {}],
+      animeList: [],
+      currentSelectedAnime: false,
     };
   }
 
   componentDidMount() {
+    this.fetchAnimeList();
+  }
+
+  fetchAnimeList() {
+    //fetch call to fetch site content
     // fetch(`https://api.jikan.moe/v3/top/anime`)
     //   .then((res) => res.json())
     //   .then((res) => {
     //     console.log(res);
     //   });
 
-    axios
+    axios // axios call to fetch site content
       .get("https://api.jikan.moe/v3/top/anime")
       .then((response) => {
-        console.log(response, response.data, response.data.top);
+        console.log(response);
         this.setState({
           animeList: response.data.top,
         });
@@ -38,14 +39,8 @@ class Landing extends Component {
       });
   }
 
-  handleFilePick(files) {
-    console.log("handleFilePick", files);
-    this.setState({
-      files,
-    });
-  }
-
-  renderFileConfirmDialog(item) {
+  renderAnimeDetailModal(item) {
+    //popup view for displaying anime details
     return (
       <div
         style={{
@@ -159,6 +154,7 @@ class Landing extends Component {
   }
 
   renderListCard(item) {
+    //list item for anime
     return (
       <div
         style={{
@@ -172,6 +168,7 @@ class Landing extends Component {
           style={{
             height: "35vw",
             minHeight: 240,
+            maxHeight: 400,
             borderRadius: "1vw",
             background: "#234233",
             overflow: "hidden",
@@ -207,7 +204,6 @@ class Landing extends Component {
             />
           </a>
         </div>
-        {/* <p>Episodes :16</p> */}
         <div
           style={{
             display: "flex",
@@ -220,14 +216,9 @@ class Landing extends Component {
             style={{
               display: "flex",
               flexDirection: "column",
-              //   marginLeft: 10,
-              //   paddingTop: 20,
               padding: 0,
               height: "100%",
               width: "100%",
-              // marginBottom: 10,
-
-              //   justifyContent: "space-between",
             }}
           >
             <p
@@ -237,7 +228,6 @@ class Landing extends Component {
                 padding: 0,
                 marginBottom: 10,
                 overflowWrap: "break-word",
-                // fontWeight: "bold",
               }}
             >
               {item.title}
@@ -278,6 +268,7 @@ class Landing extends Component {
   }
 
   renderContent() {
+    //page content
     return (
       <div
         style={{
@@ -328,6 +319,8 @@ class Landing extends Component {
             flexWrap: "wrap",
             height: "100%",
             width: "95%",
+            maxWidth: 900,
+
             alignSelf: "center",
             paddingTop: 20,
             paddingBottom: 20,
@@ -344,9 +337,7 @@ class Landing extends Component {
   render() {
     return (
       <div
-        // className="App"
         style={{
-          //   backgroundColor: "#000",
           height: "100vh",
           width: "100vw",
           justifyContent: "center",
@@ -354,7 +345,7 @@ class Landing extends Component {
         }}
       >
         {this.state.currentSelectedAnime &&
-          this.renderFileConfirmDialog(this.state.currentSelectedAnime)}
+          this.renderAnimeDetailModal(this.state.currentSelectedAnime)}
         {this.renderContent()}
       </div>
     );
